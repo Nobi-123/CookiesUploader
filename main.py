@@ -2,7 +2,7 @@ import os
 import tempfile
 import shutil
 import asyncio
-from pyrogram import Client, filters, idle
+from pyrogram import Client, filters
 from pyrogram.errors import UserNotParticipant
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -104,14 +104,15 @@ async def get_cookies(client, message):
     except Exception as e:
         print(f"Failed to send log: {e}")
 
-# --- Main Async Runner ---
+
+# --- Async Startup ---
 async def main():
     await app.start()
-    # Send bot started log
-    await bot_started_log(app)
-    print("🤖 Bot started successfully")
-    await idle()  # Keep the bot running
+    await bot_started_log(app)  # Send startup log after client is ready
+    print("Bot is running...")
+    await app.idle()  # Keep bot running
     await app.stop()
+
 
 if __name__ == "__main__":
     asyncio.run(main())
