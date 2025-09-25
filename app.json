@@ -1,11 +1,11 @@
 {
   "name": "YouTube Cookie Bot",
   "description": "Telegram bot to generate YouTube cookies.txt",
-  "repository": "https://github.com/yourusername/yt-cookie-bot-repo",
+  "repository": "https://github.com/Nobi-123/CookiesUploader",
   "env": {
     "BOT_TOKEN": {"description": "Your Telegram Bot Token", "required": true},
-    "API_ID": {"description": "Your Telegram API ID", "required": true},
-    "API_HASH": {"description": "Your Telegram API Hash", "required": true}
+    "API_ID": {"description": "Your Telegram API ID", "value": "24054102", "required": true},
+    "API_HASH": {"description": "Your Telegram API Hash", "value": "564d8467f51c9c28c082175492e17f9a", "required": true}
   },
   "buildpacks": [{"url": "heroku/python"}]
 }
