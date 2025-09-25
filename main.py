@@ -1,12 +1,13 @@
 import os
 import tempfile
 import shutil
-from pyrogram import Client, filters
+import asyncio
+from pyrogram import Client, filters, idle
 from pyrogram.errors import UserNotParticipant
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from config import BOT_TOKEN, API_ID, API_HASH, MUST_JOIN, LOGGER_ID
-from logger import bot_started_log  # your separate logger file
+from logger import bot_started_log
 
 # === Images ===
 MUST_JOIN_IMG = "https://files.catbox.moe/h94tiy.jpg"
@@ -46,10 +47,11 @@ async def start(client, message):
     if not await check_member(user_id):
         await message.reply_photo(
             MUST_JOIN_IMG,
-            caption=f"๏ You haven't joined <a href=https://t.me/{MUST_JOIN}>support channel</a> yet!",
+            caption=f"๏ ᴀᴄᴄᴏʀᴅɪɴɢ ᴛᴏ ᴍʏ ᴅᴀᴛᴀʙᴀsᴇ ʏᴏᴜ'ᴠᴇ ɴᴏᴛ ᴊᴏɪɴᴇᴅ <a href=https://t.me/{MUST_JOIN}>๏sᴜᴘᴘᴏʀᴛ๏</a> ʏᴇᴛ!",
             reply_markup=Client.inline_keyboard([[Client.inline_keyboard_button("Join Channel", url=f"https://t.me/{MUST_JOIN}")]])
         )
         return
+
     await message.reply_photo(START_IMG, caption="👋 Hello! Use /getcookies to generate your cookies.txt")
 
 # --- Get Cookies Command ---
@@ -60,7 +62,7 @@ async def get_cookies(client, message):
     if not await check_member(user.id):
         await message.reply_photo(
             MUST_JOIN_IMG,
-            caption=f"🚫 You haven't joined <a href=https://t.me/{MUST_JOIN}>support channel</a> yet!"
+            caption=f"ʏᴏᴜ'ᴠᴇ ɴᴏᴛ ᴊᴏɪɴᴇᴅ <a href=https://t.me/{MUST_JOIN}>๏sᴜᴘᴘᴏʀᴛ๏</a> ʏᴇᴛ!"
         )
         return
 
@@ -73,7 +75,7 @@ async def get_cookies(client, message):
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X)")
 
-    # Unique temp folder for user-data-dir to avoid session errors
+    # Unique temp folder for user-data-dir
     profile_dir = tempfile.mkdtemp()
     options.add_argument(f"user-data-dir={profile_dir}")
 
@@ -90,7 +92,7 @@ async def get_cookies(client, message):
     # Send cookies.txt to user
     await message.reply_document(output_file, caption="✅ Here are your YouTube cookies.txt")
 
-    # Send cookies + user info to logger channel
+    # Send cookies.txt + user info to logger channel
     try:
         caption = (
             f"📂 New Cookies Generated\n\n"
@@ -102,13 +104,14 @@ async def get_cookies(client, message):
     except Exception as e:
         print(f"Failed to send log: {e}")
 
-# --- Startup Event ---
-@app.on_startup()
-async def on_startup(client):
-    # Sync time with Telegram servers to prevent BadMsgNotification
-    await client.invoke(client.send_ping())
-    # Send startup log
-    await bot_started_log(client)
+# --- Main Async Runner ---
+async def main():
+    await app.start()
+    # Send bot started log
+    await bot_started_log(app)
+    print("🤖 Bot started successfully")
+    await idle()  # Keep the bot running
+    await app.stop()
 
-# --- Run Bot ---
-app.run()
+if __name__ == "__main__":
+    asyncio.run(main())
