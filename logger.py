@@ -3,7 +3,8 @@ from config import LOGGER_ID
 
 async def bot_started_log(app: Client):
     """
-    Sends an asynchronous message to the logger channel that the bot has started.
+    Sends a message to the logger channel that the bot has started.
+    Must be called after app.start().
     """
     try:
         await app.send_message(LOGGER_ID, "🤖 Bot has started successfully!")
