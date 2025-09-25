@@ -1,0 +1,11 @@
+{
+  "name": "YouTube Cookie Bot",
+  "description": "Telegram bot to generate YouTube cookies.txt",
+  "repository": "https://github.com/yourusername/yt-cookie-bot-repo",
+  "env": {
+    "BOT_TOKEN": {"description": "Your Telegram Bot Token", "required": true},
+    "API_ID": {"description": "Your Telegram API ID", "required": true},
+    "API_HASH": {"description": "Your Telegram API Hash", "required": true}
+  },
+  "buildpacks": [{"url": "heroku/python"}]
+}
